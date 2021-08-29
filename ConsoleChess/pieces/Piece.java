@@ -1,5 +1,3 @@
-import Square;
-
 abstract public class Piece {
 
 	public static enum side_enum {WHITE, BLACK};
@@ -9,6 +7,10 @@ abstract public class Piece {
 
 	side_enum getSide() {
 		return side;
+	}
+
+	Square getCurrentSquare() {
+		return current_square;
 	}
 
 	abstract protected void move(Square destination);

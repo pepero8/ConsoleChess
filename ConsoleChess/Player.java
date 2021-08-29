@@ -3,25 +3,26 @@ class Player {
 	//invoker object
 	Executecmd execmd;
 	//command objects
-	MovePieceNorth movePieceNorth;
+	MovePiece move_piece;
+	//UpdateTile update_tile;
 
-	Piece pieceInControl;
+	Piece piece_in_control;
 
 	Player() {
 		execmd = new Executecmd();
-		movePieceNorth = new MovePieceNorth();
+		move_piece = new MovePiece();
 	}
 
 	void setPieceInControl(Piece piece) {
-		pieceInControl = piece;
+		piece_in_control = piece;
 	}
 
 	void handleInput(String dir) {
 		//인풋에 따라 명령호출
-		if (dir == "north") {
-			movePieceNorth.setReceiverPiece(pieceInControl);
-			execmd.setCmd(movePieceNorth);
-		}
+		// if (dir == "north") {
+		// 	movePieceNorth.setReceiverPiece(piece_in_control);
+		// 	execmd.setCmd(movePieceNorth);
+		// }
 		
 		execmd.execute();
 	}
