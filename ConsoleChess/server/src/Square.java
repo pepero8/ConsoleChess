@@ -1,3 +1,4 @@
+package server.src;
 class Square {
 	private int rank;
 	private int file;

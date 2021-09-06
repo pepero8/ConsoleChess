@@ -1,3 +1,4 @@
+package server.src.pieces;
 public class Bishop extends Piece {
 	//constructor
 	public Bishop(side_enum side, Square square) {

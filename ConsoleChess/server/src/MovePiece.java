@@ -1,3 +1,4 @@
+package server.src;
 //command class
 class MovePiece implements Command {
 	//receiver

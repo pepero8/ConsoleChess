@@ -1,3 +1,4 @@
+package server.src;
 /**
 *		이 파일은 서버에 올릴 것
 */

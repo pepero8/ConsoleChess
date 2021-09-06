@@ -1,3 +1,4 @@
+package server.src.pieces;
 abstract public class Piece {
 
 	public static enum side_enum {WHITE, BLACK};

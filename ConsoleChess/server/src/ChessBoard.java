@@ -1,3 +1,4 @@
+package server.src;
 class ChessBoard {
 	//static enum side_enum {WHITE, BLACK};
 

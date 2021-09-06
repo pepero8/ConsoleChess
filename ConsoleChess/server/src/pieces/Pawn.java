@@ -1,3 +1,4 @@
+package server.src.pieces;
 public class Pawn extends Piece {
 	//constructor
 	public Pawn(side_enum side, Square square) {

@@ -1,3 +1,4 @@
+package server.src;
 //client
 class Player {
 	//invoker object
