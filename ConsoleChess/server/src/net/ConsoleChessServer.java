@@ -29,14 +29,13 @@ class ConsoleChessServer {
 				// limit max-size of vector to MAX_CLIENTS
 				if (connected_clients.size() == MAX_CLIENTS) {
 					System.out.println("client pool full");
-					client_handler = new ClientHandler(welcomeSocket.accept());
+					client_handler = new ClientHandler(welcomeSocket.accept(), true);
 				}
 				else {
-					client_handler = new ClientHandler(welcomeSocket.accept(), lobby);
+					client_handler = new ClientHandler(welcomeSocket.accept(), false);
 					connected_clients.add(client_handler);
+					client_handler.start();
 				}
-
-				client_handler.start();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

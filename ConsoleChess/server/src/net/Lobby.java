@@ -5,7 +5,7 @@ import java.util.Vector;
 class Lobby extends WorkThread {
 	static final int MAX_ROOMS = 5;
 	Room[] rooms;
-	Vector<ClientHandler> connected_clients; //clients bound to this work thread
+	static Vector<ClientHandler> connected_clients; //clients bound to this work thread
 
 	@Override
 	void create() {
@@ -40,8 +40,8 @@ class Lobby extends WorkThread {
 	}
 
 	@Override
-	void processInput(char[] input) {
-		System.out.println("processing input: [" + String.valueOf(input) + "]");
+	void processInput(ClientHandler input) {
+		System.out.println("processing input from " + input.getIP() + ":" + input.getPort() + " - [" + String.valueOf(input.getMsgClient()) + "]");
 	}
 
 	@Override
@@ -51,11 +51,18 @@ class Lobby extends WorkThread {
 		}
 	}
 
-	/**
-	 * register ClientHandler to this work thread
-	 * called by ClientHandler instances
-	 */
+	@Override
 	void bind(ClientHandler ch) {
 		connected_clients.add(ch);
+	}
+
+	@Override
+	void exit(ClientHandler ch) {
+		connected_clients.remove(ch);
+	}
+
+	@Override
+	void relay_msg(ClientHandler ch) {
+		msg_que.add(ch);
 	}
 }
