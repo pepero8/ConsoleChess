@@ -17,9 +17,11 @@ class WorkThreadManager {
 	// }
 
 	void startWorkThreads() {
-		for (WorkThread wt : work_threads) {
-			wt.start();
-		}
+		work_threads[0].start();
+		//for (WorkThread wt : work_threads) {
+		//	wt.start();
+		//}
+		System.out.println("workthread manager: all threads started");
 	}
 
 	static WorkThread bind(String wt, ClientHandler ch) {
@@ -27,7 +29,8 @@ class WorkThreadManager {
 			case "Lobby":
 				work_threads[0].bind(ch);
 				return work_threads[0];
-			
+			default:
+				return null;	
 		}
 	}
 }

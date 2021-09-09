@@ -64,5 +64,6 @@ class Lobby extends WorkThread {
 	@Override
 	void relay_msg(ClientHandler ch) {
 		msg_que.add(ch);
+		System.out.println("msg added");
 	}
 }

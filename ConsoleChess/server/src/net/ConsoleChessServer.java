@@ -7,11 +7,13 @@ class ConsoleChessServer {
 	static final int MAX_CLIENTS = 5; //limit client numbers
 	ServerSocket welcomeSocket;
 	private static Vector<ClientHandler> connected_clients;
-	Lobby lobby;
+	//Lobby lobby;
+	WorkThreadManager wt_manager;
 
 	public ConsoleChessServer() {
 		connected_clients = new Vector<ClientHandler>();
-		lobby = new Lobby();
+		//lobby = new Lobby();
+		wt_manager = new WorkThreadManager();
 		try {
 			welcomeSocket = new ServerSocket(8014);
 		} catch (IOException e) {
@@ -21,7 +23,8 @@ class ConsoleChessServer {
 
 	void start() {
 		System.out.println("server started at port:" + welcomeSocket.getLocalPort());
-		lobby.start();
+		//lobby.start();
+		wt_manager.startWorkThreads();
 		try {
 			while (true) {
 				System.out.println("current num of connected clients: " + connected_clients.size());

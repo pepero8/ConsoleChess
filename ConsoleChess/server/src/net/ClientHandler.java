@@ -25,6 +25,7 @@ class ClientHandler extends Thread {
 	BufferedWriter out;
 
 	private char[] msg_client;
+	private char[] msg_client_cache;
 	//char[] msg_server;
 
 	// //constructor
@@ -64,6 +65,7 @@ class ClientHandler extends Thread {
 		}
 
 		msg_client = new char[6];
+		msg_client_cache = new char[6];
 		//msg_server = new char[6];
 		
 	}
@@ -94,14 +96,16 @@ class ClientHandler extends Thread {
 					//Lobby.bind(this);
 					current_wt = WorkThreadManager.bind("Lobby", this);
 					System.out.println("(" + ip_client + ":" + port_client + ")entered lobby");
+					send("sEntered lobby");
 				}
 				else {
+					System.arraycopy(msg_client, 0, msg_client_cache, 0, 6); //cache client's message
 					current_wt.relay_msg(this);
 				}
-				Arrays.fill(msg_client, (char) 0); // empty buffer
+				Arrays.fill(msg_client, (char)0); // empty buffer
 				//=========================test===========================
 
-				send("Ke8+");
+				//send("Ke8+");
 				
 				// msg_server[0] = 'K';
 				// msg_server[1] = 'e';
@@ -126,7 +130,7 @@ class ClientHandler extends Thread {
 	}
 
 	char[] getMsgClient() {
-		return msg_client;
+		return msg_client_cache;
 	}
 
 	InetAddress getIP() {
