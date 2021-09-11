@@ -3,26 +3,25 @@
 import java.util.Vector;
 
 class Lobby extends WorkThread {
-	static final int MAX_ROOMS = 5;
-	Room[] rooms;
-	static Vector<ClientHandler> connected_clients; //clients bound to this work thread
+	private static final int MAX_ROOMS = 5;
+	private Room[] rooms;
+	private static Vector<ClientHandler> connected_clients; //clients bound to this work thread
+	//private static final String wt_name = "lobby"; //work thread name
+	private static final char wt_code = MsgCodes.WT.LOBBY; //Lobby work thread code(for network communication)
 
 	@Override
-	void create() {
-		//state_buffer = new char[MAX_ROOMS * 35];
+	protected void create() {
 		rooms = new Room[MAX_ROOMS];
 		connected_clients = new Vector<ClientHandler>();
 	}
 
 	@Override
-	void updateState() {
+	protected void updateState() {
 		//=========================test===========================
 		System.out.println("updating lobby state_buffer");
-		System.out.println("current client number in lobby: " + connected_clients.size());
-		//StringBuilder state_buffer_temp = new StringBuilder();
-		state_buffer.delete(0, state_buffer.length());
-		//state_buffer = new StringBuilder();
-		//state_buffer_temp.setLength(state_buffer.length);
+		System.out.println("(Lobby)current client number in lobby: " + connected_clients.size());
+		emptyStateBuffer();
+
 		for (int room_num = 0; room_num != 5; room_num++) {
 			state_buffer.append((char)room_num)
 						.append("Lee's room".toCharArray())
@@ -32,7 +31,6 @@ class Lobby extends WorkThread {
 						.append('\n');
 		}
 
-		//state_buffer_temp.getChars(0, state_buffer_temp.length(), state_buffer, 0);
 		state_buffer.trimToSize();
 
 		System.out.println("updated state(" + state_buffer.length() + "chars): [" + state_buffer + "]");
@@ -40,15 +38,25 @@ class Lobby extends WorkThread {
 	}
 
 	@Override
-	void processInput(ClientHandler input) {
-		System.out.println("processing input from " + input.getIP() + ":" + input.getPort() + " - [" + String.valueOf(input.getMsgClient()) + "]");
+	protected void processInput(ClientHandler ch) {
+		char[] msg_client = ch.getMsgClient();
+		System.out.println("processing input from " + ch.getIP() + ":" + ch.getPort() + " - [" + String.valueOf(msg_client) + "]");
+		// =========================test===========================
+		if (msg_client[0] == MsgCodes.Client.UNBIND_WT) {
+			exit(ch);
+			ch.setCurrentwt(null);
+			ch.send(MsgCodes.Server.UNBIND_SUCCESS + wt_code);
+		}
+		// =========================test===========================
 	}
 
 	@Override
-	void broadcastState() {
+	protected void broadcastState() {
+		// =========================test===========================
 		for (ClientHandler ch : connected_clients) {
 			ch.send(state_buffer);
 		}
+		// =========================test===========================
 	}
 
 	@Override
@@ -65,5 +73,16 @@ class Lobby extends WorkThread {
 	void relay_msg(ClientHandler ch) {
 		msg_que.add(ch);
 		System.out.println("msg added");
+	}
+
+	// //get work thread name
+	// @Override
+	// String getWTName() {
+	// 	return wt_name;
+	// }
+
+	@Override
+	char getWTCode() {
+		return wt_code;
 	}
 }

@@ -3,16 +3,13 @@
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-//import java.util.ArrayDeque;
-//import java.util.Queue;
-
 abstract class WorkThread extends Thread {
-	static final int TICK_RATE = 1; //number of updates per second
-	//Queue<char[]> msg_que;
-	BlockingQueue<ClientHandler> msg_que;
-	StringBuilder state_buffer; //current state
+	private static final int TICK_RATE = 1; //number of updates per second
+	protected BlockingQueue<ClientHandler> msg_que;
+	protected StringBuilder state_buffer; //current state
 
-	public WorkThread() {
+	//constructor
+	WorkThread() {
 		msg_que = new LinkedBlockingQueue<ClientHandler>();
 		state_buffer = new StringBuilder();
 		create();
@@ -20,7 +17,6 @@ abstract class WorkThread extends Thread {
 	
 	@Override
 	public void run() {
-		//char[] next_input = null;
 		ClientHandler next_input;
 		long time_frame_start, time_frame_end, time_elapsed, time_wait;
 		while (true) {
@@ -33,41 +29,45 @@ abstract class WorkThread extends Thread {
 				}
 
 				updateState();
-
+				
 				time_frame_end = System.currentTimeMillis();
 				time_elapsed = time_frame_end - time_frame_start;
-				System.out.println("time elapsed before tick: " + time_elapsed + "ms");
+				System.out.println("time used before next tick: " + time_elapsed + "ms");
 				time_wait = ((time_wait = 1000 / TICK_RATE - time_elapsed) > 0) ? time_wait : 0;
 				Thread.sleep(time_wait);
 
+				System.out.println("============tick============");
 				broadcastState();
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.exit(1);
 			}
 		}
 		
 	}
 
+	void emptyStateBuffer() {
+		state_buffer.delete(0, state_buffer.length());
+	}
+
 	/**
 	 * serves as constructor
 	 */
-	abstract void create();
+	abstract protected void create();
 
 	/**
 	 * update state_buffer
 	 */
-	abstract void updateState();
+	abstract protected void updateState();
 
-	abstract void processInput(ClientHandler input);
+	abstract protected void processInput(ClientHandler input);
 
 	/**
 	 * broadcast state_buffer to all clients connected to this WorkThread
 	 */
-	abstract void broadcastState();
+	abstract protected void broadcastState();
 
 	/**
 	 * send client's input to WorkThread's message queue
@@ -81,4 +81,8 @@ abstract class WorkThread extends Thread {
 	abstract void bind(ClientHandler ch);
 
 	abstract void exit(ClientHandler ch);
+
+	//abstract String getWTName();
+
+	abstract char getWTCode();
 }
